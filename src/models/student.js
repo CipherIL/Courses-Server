@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcryptjs = require('bcryptjs');
 
 const studentSchema = new mongoose.Schema({
     email:{
@@ -24,11 +25,19 @@ const studentSchema = new mongoose.Schema({
     },
     courses:[{
         course:{
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
             required: true,
         }
     }]
 });
+
+studentSchema.pre('save', async function(next) {
+    if(this.isModified('password')) {
+        this.password = await bcryptjs.hash(this.password,8);
+    }
+    next();
+})
 
 const Student = mongoose.model('Student',studentSchema);
 

@@ -15,14 +15,19 @@ const courseSchema = new mongoose.Schema({
         required: true,
     },
     weeklyWindows:[{
-        window:{
+        day:{
+            type: Number,
+            required: true,
+        },
+        time:{
             type: String,
             required: true,
         }
     }],
     students:[{
         student:{
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student",
             required: true,
         }
     }]
