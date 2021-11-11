@@ -25,11 +25,41 @@ const courseSchema = new mongoose.Schema({
         }
     }],
     students:[{
-        student:{
+        studentId:{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Student",
             required: true,
         }
+    }],
+    attendance:[{
+        date:{
+            type: Date,
+            required: true,
+            unique: true,
+        },
+        windows:[{
+            time:{
+                type: String,
+                require: true,
+            },
+            attended:[{
+                studentId:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Student",
+                    required: true,
+                }
+            }],
+            notAttended:[{
+                studentId:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Student",
+                    required: true,
+                },
+                reason:{
+                    type: String,
+                }
+            }]
+        }],   
     }]
 });
 

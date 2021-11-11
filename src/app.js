@@ -1,13 +1,19 @@
 const express = require('express');
+const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
-const courseRouters = require('./routers/courseRouters');
-const professorRouters = require('./routers/professorRouters');
-const studentRouters = require('./routers/studentRouters');
-const generalRouters = require('./routers/generalRouters');
+const courseRouters = require('./routers/course.router');
+const professorRouters = require('./routers/professor.router');
+const studentRouters = require('./routers/student.router');
+const generalRouters = require('./routers/general.router');
 
 const app = express();
 
+app.use(cors({
+    origin:["http://localhost:3000",],
+    credentials:true,
+    exposedHeaders:["set-cookie"],
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(courseRouters);
