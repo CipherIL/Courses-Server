@@ -53,7 +53,6 @@ const checkValidToken = async(req,res) => {
     try{
         const token = req.cookies.token;
         const loginCredentials = await LoginCredentials.findOne({token});
-        console.log(loginCredentials)
         if(loginCredentials) return res.status(200).send(loginCredentials.isProfessor);
         else {
             res.clearCookie('token');

@@ -58,6 +58,7 @@ const addNewCourse = async (req,res) => {
     try{
         const course = new Course(data);
         course.attendance = getAttendanceArray(startDate,endDate,data.weeklyWindows);
+        console.log(course)
         await course.save();
         return res.status(200).send("Course created!");
     }catch(err){

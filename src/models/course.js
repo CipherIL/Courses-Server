@@ -35,7 +35,7 @@ const courseSchema = new mongoose.Schema({
         date:{
             type: Date,
             required: true,
-            unique: true,
+            unique: false,
         },
         windows:[{
             time:{
