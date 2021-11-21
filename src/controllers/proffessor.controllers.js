@@ -5,7 +5,7 @@ const Student = require('../models/student');
 const Course = require('../models/course');
 const getAttendanceArray = require('../utils/getAttendanceArray');
 
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{7,}$/;
 
 const addNewProfessor = async (req,res) => {
     //Data validation
@@ -58,11 +58,9 @@ const addNewCourse = async (req,res) => {
     try{
         const course = new Course(data);
         course.attendance = getAttendanceArray(startDate,endDate,data.weeklyWindows);
-        console.log(course)
         await course.save();
         return res.status(200).send("Course created!");
     }catch(err){
-        console.log(err)
         if(err.code === 11000) return res.status(400).send("Course already exists")
         res.status(500).send("Internal server error");
     }
@@ -90,7 +88,7 @@ const editStudentsInCourse = async (req,res) => {
 
         //update list of students in course
         if(!courseStudents) course.students = [];
-        else course.students = courseStudents.map(student=>{return {studentId: student._id}});
+        else course.students = courseStudents.map(student=>{return {studentId: student._id,studentName:student.name}});
         await course.save();
 
         //remove course from ejected students
@@ -118,9 +116,20 @@ const editStudentsInCourse = async (req,res) => {
     }
 }
 
+const getAllStudents = async (req,res) => {
+    try {
+        const students = await Student.find({},{name:1});
+        if(students.length === 0) return res.status(404).send("No students in database")
+        res.status(200).send(students);
+    }catch(err){
+        res.status(500).send("Internal Server Error");
+    }
+}
+
 module.exports = {
     addNewProfessor,
     addNewStudent,
     addNewCourse,
     editStudentsInCourse,
+    getAllStudents,
 }

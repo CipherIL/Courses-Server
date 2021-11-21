@@ -5,6 +5,10 @@ const loginCredentialsSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
+    isFirstLogin:{
+        type: Boolean,
+        required: true,
+    },
     token:{
         type: String,
         required: true,

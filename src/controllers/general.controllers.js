@@ -8,6 +8,7 @@ const Student = require('../models/student');
 const userLogin = async (req,res) => {
     //Find user by credentials
     const loginData = req.body;
+    const isFirstLogin = loginData.password === 'aA12345' ? true : false;
     let isProfessor,user;
     try{
         user = await Professor.findOne({'email':loginData.email});
@@ -19,11 +20,15 @@ const userLogin = async (req,res) => {
         if(user && await bcryptjs.compare(loginData.password,user.password)){ //login successful
             const loginCredentials = new LoginCredentials({
                 isProfessor,
+                isFirstLogin,
                 token: jwt.sign({data:user.id},process.env.SECRET)
             });
             loginCredentials.save();
             res.cookie('token',loginCredentials.token)
-            return res.status(200).send(isProfessor);
+            return res.status(200).send({
+                isProfessor,
+                isFirstLogin,
+            });
         }
         else return res.status(400).send("Invalid email or password")
     }catch(err){
@@ -53,7 +58,10 @@ const checkValidToken = async(req,res) => {
     try{
         const token = req.cookies.token;
         const loginCredentials = await LoginCredentials.findOne({token});
-        if(loginCredentials) return res.status(200).send(loginCredentials.isProfessor);
+        if(loginCredentials) return res.status(200).send({
+            isProfessor: loginCredentials.isProfessor,
+            isFirstLogin: loginCredentials.isFirstLogin,
+        });
         else {
             res.clearCookie('token');
             return res.status(404).send("No such token");

@@ -29,7 +29,11 @@ const courseSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Student",
             required: true,
-        }
+        },
+        studentName:{
+            type: String,
+            required: true,
+        },
     }],
     attendance:[{
         date:{
@@ -47,12 +51,20 @@ const courseSchema = new mongoose.Schema({
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Student",
                     required: true,
-                }
+                },
+                studentName:{
+                    type: String,
+                    required: true,
+                },
             }],
             notAttended:[{
                 studentId:{
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Student",
+                    required: true,
+                },
+                studentName:{
+                    type: String,
                     required: true,
                 },
                 reason:{
